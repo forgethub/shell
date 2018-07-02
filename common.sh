@@ -275,6 +275,7 @@ function fn_multiple_processes ()
     do
         read -u1000
         {
+            #注意不要使用临时文件存储数据，可以用变量，因为不同进程间的变量是隔离的，文件是操作系统层次的。
             echo $begin_date
             hive -f kpi_report.sql --hivevar date=$begin_date
             echo >&1000
