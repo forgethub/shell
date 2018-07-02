@@ -1,4 +1,17 @@
 #!/bin/bash
+#=============================================================================
+#
+# Author: zhouzhibo
+#
+# QQ : 943927833
+#
+# Last modified: 2018-07-02 21:09
+#
+# Filename: common.sh
+#
+# Description: commom script
+#
+#============================================================================*/
 
 #common var
 SCP="scp -rp StrictHostKeyChecking -o BatchMode=yes"
@@ -139,9 +152,110 @@ function fn_lock ()
 }
 
 #升级进度条展示脚本
+function fn_menu ()
+{
+    MENW[1]="Preprocess before upgrade"
+    MENW[2]="upgrading"
+    MENW[1]="Post after upgrade"
+}
+
+function fn_InstallCmd ()
+{
+    case $2 in 
+        upgradepre.log) Running_Number=1
+            ;;
+        upgrade.log) Running_Number=2
+            ;;
+        upgradepost.log) Running_Number=3
+            ;;
+        *)
+           LOG -l 4 "please input the correct log file." 
+           ;;
+    esac
+    nohup bash $1 > $2 2>&1 &
+    procid=$!
+    until ! kill -0 "$procid" > /dev/null
+    do
+        for wheel_loop in '_'  '|' '\' '/'
+        do
+            echo -en "\\003[0;0H"
+            if [ "${wheel_loop}" = '/' ];then
+                if [ -f "$2" ];then
+                    CURRENT_log_lines=$(cat $2|wc -l|xargs)
+                    ((CURRENT_log_lines=CURRENT_log_lines < ${!3}?CURRENT_log_lines:${!3}))
+                    CUR_PERCENT=$(echo "scale=2";${CURRENT_log_lines/${!3}|bc|tr -d '^.')
+                    CUR_PERCENT=$((10#${CUR_PERCENT}))
+                    if [ "${CUR_PERCENT}" -ge 0 -a "${CUR_PERCENT}" -lt 10 ];then
+                        INSTALL_PERCENT=" ${CUR_PERCENT}"
+                    fi
+                else
+                    INSTALL_PERCENT="${INSTALL_PERCENT%\%}"
+                fi
+                tput cup $(expr $L_PG_${Running_Number} - 1) $(expr $C_PG_${Running_Number} - 16)
+                echo -en "${INSTALL_PERCENT}%...running."
+            fi
+            echo -en "\\03[$((L_PG_${Running_Number}));$((C_PG_${Running_Number}))H${wheel_loop}"
+            sleep 1
+            continue 
+        done
+    done
+
+    wait $procid
+    if [ "$?" -ne 0 ];then
+        tput cup $(expr $L_PG_${Running_Number} - 1) $(expr $C_PG_${Running_Number} - 16)
+        echo -en "${INSTALL_PERCENT}%...\033[1;31m failed !\033[0m"
+        LOG -l 4 "upgrade ${2%%.log} failed."
+        return 1
+    else
+        tput cup $(expr $L_PG_${Running_Number} - 1) $(expr $C_PG_${Running_Number} - 16)
+        echo -en "${INSTALL_PERCENT}%...\033[1;32m failed !\033[0m"
+        return 0
+    fi
+    return 0
+}
+
+#Descripttion dispaly upgrade process show 
+#parmeters $1 logfile length; $2 logfile
 function fn_display_process ()
 {
+    fn_menu
+    local num_list=1
+    local log_size=$1
+    local log_file=$2
+    MENU_COUNT=${#MENW[*]} 
+    for((i=1;i<=$(expr $MENU_COUNT + 10);i++))
+    do
+        if [ -n "${MENW[$i]}" ];then
+            MENU_list[$i]=$i
+        fi
+    done
 
+    NO_NULL_PROGRAM=$(echo ${MENU_list[*]})
+    LAST_PROGRAM=${MENU_list[${#MENU_list}-1]}
+
+    for i in ${NO_NULL_PROGRAM}
+    do
+        if [ "${num_list}" -lt 10 ];then
+            num_list=" $num_list"
+        else
+            num_list="$num_list"
+        fi
+        echo -en "$num_list.${MENW[i]}....precent:00%wating..."
+        echo -en "\e[n";read -sdR pos;pos=${pos#*[};p=${pos/;/ };eval L_PG_${i}=${p%% *};eval C_PG_${i}=${p##* }
+        echo
+    done 
+
+    for((i=1;i<=79;i++))
+    do
+        echo -n "-"
+    done
+    echo
+    echo -en "\e[n";read -sdR pos;pos=${pos#*[};p=${pos/;/ };eval L_END=${p%% *};eval C_END=${p##* }
+
+    fn_InstallCmd $script $log_file $log_size
+    local ret=$?
+    tput cup $L_END $C_END
+    exit $ret
 }
 
 #多进程执行脚本
