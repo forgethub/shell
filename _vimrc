@@ -1,74 +1,83 @@
 set nocompatible              " required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=$VIM/vimfiles/bundle/Vundle.vim/
-call vundle#begin()
 
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-
-" Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
-
+" Install L9 and avoid a Naming conflict if you've already installed a
+" different version somewhere else.
+" Plugin 'ascenator/L9', {'name': 'newL9'}
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
-set nocompatible    "éå…¼å®¹æ¨¡å¼  
+
+" All of your Plugins must be added before the following line
 syntax on
-set background=dark "èƒŒæ™¯è‰²  
+set background=dark "±³¾°É«  
 color desert  
-set ruler           "åœ¨å·¦ä¸‹è§’æ˜¾ç¤ºå½“å‰æ–‡ä»¶æ‰€åœ¨è¡Œ  
-set showcmd         "åœ¨çŠ¶æ€æ æ˜¾ç¤ºå‘½ä»¤  
-set showmatch       "æ˜¾ç¤ºåŒ¹é…çš„æ‹¬å·  
-set ignorecase      "å¤§å°å†™æ— å…³åŒ¹é…  
-set smartcase       "åªèƒ½åŒ¹é…ï¼Œå³å°å†™å…¨åŒ¹é…ï¼Œå¤§å°å†™æ··åˆåˆ™ä¸¥æ ¼åŒ¹é…  
-set hlsearch        "æœç´¢æ—¶é«˜äº®æ˜¾ç¤º  
-set incsearch       "å¢é‡æœç´¢  
-"set nohls           "æœç´¢æ—¶éšç€è¾“å…¥ç«‹å³å®šä½ï¼Œä¸çŸ¥ä»€ä¹ˆåŸå› ä¼šå…³é—­ç»“æœé«˜äº®  
-set report=0        "æ˜¾ç¤ºä¿®æ”¹æ¬¡æ•°  
-set mouse=a         "æ§åˆ¶å°å¯ç”¨é¼ æ ‡  
-set number          "è¡Œå·  
-set nobackup        "æ— å¤‡ä»½  
-set cursorline      "é«˜äº®å½“å‰è¡ŒèƒŒæ™¯  
-set fileencodings=ucs-bom,UTF-8,GBK,BIG5,latin1  
-set fileencoding=UTF-8  
-set fileformat=unix "æ¢è¡Œä½¿ç”¨unixæ–¹å¼  
-set ambiwidth=double  
-set noerrorbells    "ä¸æ˜¾ç¤ºå“é“ƒ  
-set visualbell      "å¯è§†åŒ–é“ƒå£°  
-set foldmarker={,}  "ç¼©è¿›ç¬¦å·  
-"set foldmethod=indent   "ç¼©è¿›ä½œä¸ºæŠ˜å æ ‡è¯†  
-set foldopen-=undo  "æ’¤é”€æ—¶ä¸æ‰“å¼€æŠ˜å   
-set updatecount=0   "ä¸ä½¿ç”¨äº¤æ¢æ–‡ä»¶  
-set magic           "ä½¿ç”¨æ­£åˆ™æ—¶ï¼Œé™¤äº†$ . * ^ä»¥å¤–çš„å…ƒå­—ç¬¦éƒ½è¦åŠ åæ–œçº¿  
-  
-"ç¼©è¿›å®šä¹‰  
-set shiftwidth=4  
-set tabstop=4  
-set softtabstop=4  
-set expandtab  
-set smarttab  
-set backspace=2     "é€€æ ¼é”®å¯ä»¥åˆ é™¤ä»»ä½•ä¸œè¥¿  
-"æ˜¾ç¤ºTABå­—ç¬¦ä¸º<+++  
-"set list  
-"set list listchars=tab:<+  
-  
-"æ˜ å°„å¸¸ç”¨æ“ä½œ  
-map <F5> :!python.exe %<cr>
-map <F2> : :NERDTree<cr>
+set ruler           "ÔÚ×óÏÂ½ÇÏÔÊ¾µ±Ç°ÎÄ¼şËùÔÚĞĞ  
+set showcmd         "ÔÚ×´Ì¬À¸ÏÔÊ¾ÃüÁî  
+set showmatch       "ÏÔÊ¾Æ¥ÅäµÄÀ¨ºÅ  
+set ignorecase      "´óĞ¡Ğ´ÎŞ¹ØÆ¥Åä  
+set smartcase       "Ö»ÄÜÆ¥Åä£¬¼´Ğ¡Ğ´È«Æ¥Åä£¬´óĞ¡Ğ´»ìºÏÔòÑÏ¸ñÆ¥Åä  
+set hlsearch        "ËÑË÷Ê±¸ßÁÁÏÔÊ¾  
+set incsearch       "ÔöÁ¿ËÑË÷  
+"set nohls           "ËÑË÷Ê±Ëæ×ÅÊäÈëÁ¢¼´¶¨Î»£¬²»ÖªÊ²Ã´Ô­Òò»á¹Ø±Õ½á¹û¸ßÁÁ  
+set report=0        "ÏÔÊ¾ĞŞ¸Ä´ÎÊı  
+set mouse=a         "¿ØÖÆÌ¨ÆôÓÃÊó±ê  
+set number          "ĞĞºÅ  
+set nobackup        "ÎŞ±¸·İ  
+set cursorline      "¸ßÁÁµ±Ç°ĞĞ±³¾°  
+"set fileformat=unix "»»ĞĞÊ¹ÓÃunix·½Ê½  
+set updatecount=0   "²»Ê¹ÓÃ½»»»ÎÄ¼ş  
+
+"gvim×ÖÌåÉèÖÃ
+"set guifont=ĞÂËÎÌå:h12:cGB2312
+set guifont=courier_new:h12
+"gvimÄÚ²¿±àÂë
+set encoding=utf-8
+"µ±Ç°±à¼­µÄÎÄ¼ş±àÂë
+set fileencoding=utf-8
+"gvim´ò¿ªÖ§³Ö±àÂëµÄÎÄ¼ş
+set fileencodings=ucs-bom,utf-8,gbk,cp936,gb2312,big5,euc-jp,euc-kr,latin1
+set langmenu=zh_CN
+let $LANG = 'zh_CN.UTF-8'
+"½â¾öconsleÊä³öÂÒÂë
+language messages zh_CH.utf-8
+"½âÊÍ²Ëµ¥ÂÒÂë
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim
+"ÉèÖÃÖÕ¶Ë±àÂëÎªgvimÄÚ²¿±àÂëencoding
+let &termencoding=&encoding
+"·ÀÖ¹ÌØÊâ·ûºÅÎŞ·¨Õı³£ÏÔÊ¾
+set ambiwidth=double
+"Ëõ½ø³ß´çÎª4¸ö¿Õ¸ñ
+set sw=4
+"tab¿í¶ÈÎª4¸ö×Ö·û
+set ts=4
+"±à¼­Ê±½«ËùÓĞtabÌæ»»Îª¿Õ¸ñ
+set et
+"°´Ò»´Îbackspace¾ÍÉ¾³ı4¸ö¿Õ¸ñÁË
+set smarttab
+set backspace=indent,eol,start
+ 
+"Ó³Éä³£ÓÃ²Ù×÷  
+map <F5> :!D:\python\python.exe %<cr>
 map <F6> I<!--<Esc>A--><Esc>
 map <F7> :s/^\([[:space:]]\+\)<!--\(.*\)-->$/\1\2/g<cr>
 
 if has("gui_running")  
     set lines=25  
     set columns=80  
-    set lazyredraw  "å»¶è¿Ÿé‡ç»˜  
-    set guioptions-=m   "ä¸æ˜¾ç¤ºèœå•  
-    set guioptions-=T   "ä¸æ˜¾ç¤ºå·¥å…·æ   
+    set lazyredraw  "ÑÓ³ÙÖØ»æ  
+    set guioptions-=m   "²»ÏÔÊ¾²Ëµ¥  
+    set guioptions-=T   "²»ÏÔÊ¾¹¤¾ßÀ¸  
     set guifont=consolas\ 10  
 endif  
   
@@ -76,32 +85,19 @@ set nowritebackup
 set noswapfile
 
 let Tlist_Ctags_Cmd='ctags.exe'
-
 let Tlist_Auto_Open=1
-
-let g:pydiction_location = 'D:\Program Files (x86)\Vim\vim80\ftplugin\complete-dict'
-
-let g:pydiction_menu_height = 20
-set encoding=utf-8
-source $VIMRUNTIME/delmenu.vim  
   
-source $VIMRUNTIME/menu.vim  
-language messages zh_CN.utf-8
-set tags="G:\gitforhub\practice14\tags"
+set tags=F:\shell_script\tags;
 set paste
-" åœ¨æµè§ˆå™¨é¢„è§ˆ for win32
+" ÔÚä¯ÀÀÆ÷Ô¤ÀÀ for win32
 
 function! ViewInBrowser(name)
     let file = expand("%:p")
     exec ":update " . file
     let l:browsers = {
         \"cr":"D:/WebDevelopment/Browser/Chrome/Chrome.exe",
-        \"ff":"D:/program files/Mozilla Firefox/firefox.exe",
+        \"ff":"D:/firefox/firefox.exe",
         \"ie":"C:/progra~1/intern~1/iexplore.exe",
-        \"ie6":"D:/WebDevelopment/Browser/IETester/IETester.exe -ie6",
-        \"ie7":"D:/WebDevelopment/Browser/IETester/IETester.exe -ie7",
-        \"ie8":"D:/WebDevelopment/Browser/IETester/IETester.exe -ie8",
-        \"ie9":"D:/WebDevelopment/Browser/IETester/IETester.exe -ie9",
         \"iea":"D:/WebDevelopment/Browser/IETester/IETester.exe -all"
     \}
     let htdocs='E:\\apmxe\\htdocs\\'
@@ -115,26 +111,46 @@ function! ViewInBrowser(name)
     endif
 endfunction
 nmap <f4> :call ViewInBrowser("ff")<cr>
-nmap <f4>ie :call ViewInBrowser("ie")<cr>
+"nmap <f4>ie :call ViewInBrowser("ie")<cr>
     
+map <F2> :call Titlepython()<cr>'s
 map <F3> :call TitleDet()<cr>'s
 function AddTitle()
-    call append(0,"/*=============================================================================")
-    call append(1,"#")
-    call append(2,"# Author: zhouzhibo")
-    call append(3,"#")
-    call append(4,"# QQ : 1400045186")
-    call append(5,"#")
-    call append(6,"# Last modified: ".strftime("%Y-%m-%d %H:%M"))
-    call append(7,"#")
-    call append(8,"# Filename: ".expand("%:t"))
-    call append(9,"#")
-    call append(10,"# Description: ")
-    call append(11,"#")
-    call append(12,"=============================================================================*/")
+    call append(0,"#!/bin/bash")
+    call append(1,"#*=============================================================================")
+    call append(2,"#")
+    call append(3,"# Author: zhouzhibo")
+    call append(4,"#")
+    call append(5,"# id : 613013")
+    call append(6,"#")
+    call append(7,"# Last modified: ".strftime("%Y-%m-%d %H:%M"))
+    call append(8,"#")
+    call append(9,"# Filename: ".expand("%:t"))
+    call append(10,"#")
+    call append(11,"# Description: ")
+    call append(12,"#")
+    call append(13,"#============================================================================*/")
     echohl WarningMsg | echo "Successful in adding the copyright." | echohl None
 endf
-"æ›´æ–°æœ€è¿‘ä¿®æ”¹æ—¶é—´å’Œæ–‡ä»¶å
+
+function AddpythonTitle()
+    call append(0,"#!/usr/bin/python3")
+    call append(1,"'''")
+    call append(2,"#")
+    call append(3,"# Author: zhouzhibo")
+    call append(4,"#")
+    call append(5,"# id : 613013")
+    call append(6,"#")
+    call append(7,"# Last modified: ".strftime("%Y-%m-%d %H:%M"))
+    call append(8,"#")
+    call append(9,"# Filename: ".expand("%:t"))
+    call append(10,"#")
+    call append(11,"# Description: for freedom")
+    call append(12,"#")
+    call append(13,"'''")
+    echohl WarningMsg | echo "Successful in adding the copyright." | echohl None
+endf
+"¸üĞÂ×î½üĞŞ¸ÄÊ±¼äºÍÎÄ¼şÃû
 function UpdateTitle()
     normal m'
     execute '/# *Last modified:/s@:.*$@\=strftime(":\t%Y-%m-%d %H:%M")@'
@@ -145,12 +161,12 @@ function UpdateTitle()
     normal 'k
     echohl WarningMsg | echo "Successful in updating the copy right." | echohl None
 endfunction
-"åˆ¤æ–­å‰10è¡Œä»£ç é‡Œé¢ï¼Œæ˜¯å¦æœ‰Last modifiedè¿™ä¸ªå•è¯ï¼Œ
-"å¦‚æœæ²¡æœ‰çš„è¯ï¼Œä»£è¡¨æ²¡æœ‰æ·»åŠ è¿‡ä½œè€…ä¿¡æ¯ï¼Œéœ€è¦æ–°æ·»åŠ ï¼›
-"å¦‚æœæœ‰çš„è¯ï¼Œé‚£ä¹ˆåªéœ€è¦æ›´æ–°å³å¯
+"ÅĞ¶ÏÇ°10ĞĞ´úÂëÀïÃæ£¬ÊÇ·ñÓĞLast modifiedÕâ¸öµ¥´Ê£¬
+"Èç¹ûÃ»ÓĞµÄ»°£¬´ú±íÃ»ÓĞÌí¼Ó¹ı×÷ÕßĞÅÏ¢£¬ĞèÒªĞÂÌí¼Ó£»
+"Èç¹ûÓĞµÄ»°£¬ÄÇÃ´Ö»ĞèÒª¸üĞÂ¼´¿É
 function TitleDet()
     let n=1
-    "é»˜è®¤ä¸ºæ·»åŠ 
+    "Ä¬ÈÏÎªÌí¼Ó
     while n < 10
         let line = getline(n)
         if line =~ '^\#\s*\S*Last\smodified:\S*.*$'
@@ -162,8 +178,21 @@ function TitleDet()
     call AddTitle()
 endfunction
 
+function Titlepython()
+    let n=1
+    "Ä¬ÈÏÎªÌí¼Ó
+    while n < 10
+        let line = getline(n)
+        if line =~ '^\#\s*\S*Last\smodified:\S*.*$'
+            call UpdateTitle()
+            return
+        endif
+        let n = n + 1
+    endwhile
+    call AddpythonTitle()
+endfunction
+
 map <F9> :only <cr>
-set nocompatible
 filetype plugin indent on
 set guioptions-=T  
 set guioptions-=m
@@ -181,4 +210,8 @@ function! s:VSetSearch()
     let @s = temp
 endfunction
 
+autocmd GUIEnter * simalt ~x
 filetype plugin on
+let g:pydiction_location = 'D:\Vim\vimfiles\ftplugin\pydiction\complete-dict'
+let g:pydiction_menu_height = 11
+
