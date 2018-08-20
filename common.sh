@@ -17,8 +17,8 @@
 SCP="scp -rp StrictHostKeyChecking -o BatchMode=yes"
 SSH="ssh -n -o StrictHostKeyChecking -o BatchMode=yes"
 CUR_USE=$(whoami)
-ABS_DIR=$($(cd dirname $0);pwd)
-
+ABS_DIR=$(cd $(dirname -- $0);pwd)
+FILE_DIR=$(basename -- $0)
 #Descripttion check the ip
 #parmeters ip address
 function fn_validity_ip()
@@ -46,15 +46,27 @@ function fn_validity_ip()
 #parmeters 0 or not 0
 function fn_check_status ()
 {
-    local ERR_RETURN=$1
-    echo -en "\\033[65G"
-    if [ "${ERR_RETURN}" -eq "0" ]
+    local l_err_return="$1"
+    local l_err_comment="$2"
+    [ -n "${l_err_comment}" ] && echo -n "${l_err_comment}  " || echo -en "\\033[65G"
+    if [ "${l_err_return}" -eq "0" ]
     then
         echo -en "\\033[32m[done]"
         echo -e "\\033[0;39m"
     else
         echo -en "\\033[1;31m[fail]"
         echo -e "\\033[0;39m"
+    fi
+    return 0
+}
+
+function fn_touch_logfile ()
+{
+    if [ ! -f "${log_file}" ]
+    then
+        logfile_dir=$(dirname ${log_file})
+        [ ! -d "${logfile_dir}" ] && mkdir -p --mode=750 ${logfile_dir}
+        touch "${log_file}"
     fi
 }
 
@@ -65,10 +77,11 @@ function LOG()
     local level="2"
     local level_str="INFO"
     local is_echo="false"
-    local tag=""
+    local tag="${CUR_USE}"
     local startTime=`date "+%Y-%m-%d %T"`
     local maxsize=1024
-    local log_file="script.log"
+    local log_file="/tmp/build_ftp.log"
+    local result_flag="success"
 
     OPTIND="1"
     while getopts ":t:l:c:emsf" opt
@@ -83,9 +96,9 @@ function LOG()
         e)
             is_echo="true";;
         f)
-            result_flag="failed"
+            result_flag="failed";;
         s)
-            result_flag="true"
+            result_flag="success";;
         :)
             echo "operation type $0 -${OPTARG} is no support.";;
         *)
@@ -107,112 +120,25 @@ function LOG()
         level_str="ERROR";;
     esac
 
-    mesg="[$(date +%D\ %T)];${level_str};${tag};${CUR_FILE_DIR};${result_flag};${CUR_LOGINIP:-127.0.0.1};${comment}"
+    mesg="[$(date +%D\ %T)];${level_str};${tag};${FILE_DIR};${result_flag};${CUR_LOGINIP:-127.0.0.1};${comment}"
 
-    if [ ! -f "${log_file}" ]
-    then
-        logfile_dir=$(dirname ${log_file})
-        mkdir -p ${logfile_dir}
-    else
-        local file_log_size=$(du -sk "${log_file}"| awk '{print $1}')
-        if [ "${file_log_size}" -gt "${maxsize}" ];then
-            file_basename=${log_file%.log}
-            for index in 3 2 1
-            do
-                [ -f ${file_basename}_${index}.log ] && mv ${file_basename}_${index}.log ${file_basename}_$((index++)).log
-            done
-            cp -pf ${log_file} ${file_basename}_1.log
-            :>${log_file}
-        fi
-    fi
-}
-
-#good methmod
-#flock 互斥锁
-#(
-#    flock -n -x 7 7>&7
-#    需要执行的语句
-#    ...
-#)7<> /tmp/$$.lock
-#互斥锁的第二种方法
-function fn_lock ()
-{
-    [ -f "lock.flag" ] && rm -rf lock.flag
-    eval $1
-    echo $! >lock.flag
-    #检查是否有进程在执行，防止脚本执行多次
-    if [ -f "lock.flag" ]
-        read pid < lock.flag
-        kill -0 $pid & >/dev/null
-        if [ "$?" -eq 0 ];then
-            LOG -el 4 "that is same script is running please wait."
-            return 1
-        fi
-    fi
-}
-
-#升级进度条展示脚本
-function fn_menu ()
-{
-    MENW[1]="Preprocess before upgrade"
-    MENW[2]="upgrading"
-    MENW[1]="Post after upgrade"
-}
-
-function fn_InstallCmd ()
-{
-    case $2 in 
-        upgradepre.log) Running_Number=1
-            ;;
-        upgrade.log) Running_Number=2
-            ;;
-        upgradepost.log) Running_Number=3
-            ;;
-        *)
-           LOG -l 4 "please input the correct log file." 
-           ;;
-    esac
-    nohup bash $1 > $2 2>&1 &
-    procid=$!
-    until ! kill -0 "$procid" > /dev/null
-    do
-        for wheel_loop in '_'  '|' '\' '/'
+    fn_touch_logfile
+    local file_log_size=$(du -sk "${log_file}"| awk '{print $1}')
+    if [ "${file_log_size}" -gt "${maxsize}" ];then
+        file_basename=${log_file%.log}
+        for index in 3 2 1
         do
-            echo -en "\\003[0;0H"
-            if [ "${wheel_loop}" = '/' ];then
-                if [ -f "$2" ];then
-                    CURRENT_log_lines=$(cat $2|wc -l|xargs)
-                    ((CURRENT_log_lines=CURRENT_log_lines < ${!3}?CURRENT_log_lines:${!3}))
-                    CUR_PERCENT=$(echo "scale=2";${CURRENT_log_lines/${!3}|bc|tr -d '^.')
-                    CUR_PERCENT=$((10#${CUR_PERCENT}))
-                    if [ "${CUR_PERCENT}" -ge 0 -a "${CUR_PERCENT}" -lt 10 ];then
-                        INSTALL_PERCENT=" ${CUR_PERCENT}"
-                    fi
-                else
-                    INSTALL_PERCENT="${INSTALL_PERCENT%\%}"
-                fi
-                tput cup $(expr $L_PG_${Running_Number} - 1) $(expr $C_PG_${Running_Number} - 16)
-                echo -en "${INSTALL_PERCENT}%...running."
-            fi
-            echo -en "\\03[$((L_PG_${Running_Number}));$((C_PG_${Running_Number}))H${wheel_loop}"
-            sleep 1
-            continue 
+            [ -f ${file_basename}_${index}.log ] && mv ${file_basename}_${index}.log ${file_basename}_$((index++)).log
         done
-    done
-
-    wait $procid
-    if [ "$?" -ne 0 ];then
-        tput cup $(expr $L_PG_${Running_Number} - 1) $(expr $C_PG_${Running_Number} - 16)
-        echo -en "${INSTALL_PERCENT}%...\033[1;31m failed !\033[0m"
-        LOG -l 4 "upgrade ${2%%.log} failed."
-        return 1
-    else
-        tput cup $(expr $L_PG_${Running_Number} - 1) $(expr $C_PG_${Running_Number} - 16)
-        echo -en "${INSTALL_PERCENT}%...\033[1;32m failed !\033[0m"
-        return 0
+        cp -pf ${log_file} ${file_basename}_1.log
+        :>${log_file}
     fi
-    return 0
-}
+    if [ "${is_echo}" = "ture" ]
+    then
+        echo "${mesg}" |tee -a ${log_file}
+    else
+        echo "${mesg}" >> ${log_file}
+    fi
 
 #Descripttion dispaly upgrade process show 
 #parmeters $1 logfile length; $2 logfile
