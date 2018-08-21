@@ -140,6 +140,8 @@ function LOG()
         echo "${mesg}" >> ${log_file}
     fi
 
+}
+
 #Descripttion dispaly upgrade process show 
 #parmeters $1 logfile length; $2 logfile
 function fn_display_process ()
