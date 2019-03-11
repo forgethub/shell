@@ -4,12 +4,6 @@
     :reg
 
 
-##vim 数学运算
-| 按键 | 说明 | 
-| ------ | ------ |
-| <c+a> | 加一 |
-| <c+x> | 减一 |
-
 
 
 ##FileType事件
@@ -64,8 +58,4 @@ Larry Lessig wrote the book "Remix".
 ```
 注意到Vim将Larry名字中的ssig也替换了！mappings不管被映射字符串的前后字符是什么,它只在文本中查找指定的字符串并替换他们。
 
-##vim多窗口运行
-###批量修改多个窗口中的内容
-```
-:argdo %s//n/g
 ```
