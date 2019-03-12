@@ -64,11 +64,20 @@ d{motion} 命令可以对一个字符（ dl ）、一个完整单词（ daw ）�
 | 按键 | 操作 | 移动 |
 | ------ | ------ | ------ | 
 | dw | 删除 | 到下一个单词 |
-| ci | 复制 | 在括号内 | 
+| ci( | 复制 | 在括号内 | 
 ####自定义操作符 
-####自定义动作命令
+####自定义动作命令(Operator-Pending映射)
+> :onoremap b /return&lt;cr&gt; 如果执行Vim把整个函数体中直到return上面的内容都删除了  
+> :onoremap &lt;silent&gt; F :&lt;C-U&gt;normal! 0f(hviw&lt;CR&gt; 
+> 可以通过v可视模式来选中非光标作为起始位置,&lt;C-U&gt;是为了remove the range。
 
-
+#####Normal命令
+* 避免映射
+> :nnoremap G dd  
+> normal! G 脚本中通过这种方式来避免用户自动映射来影响脚本功能
+* 特殊字符
+> normal! /foo&lt;cr&gt; 无法解释特殊字符，通过Execute命令解释特殊字符
+> 类似于shell或python脚本中的eval命令
 
 #插入模式
 
@@ -79,4 +88,6 @@ d{motion} 命令可以对一个字符（ dl ）、一个完整单词（ daw ）�
 
 
 #可视模式
-
+##列可视模式
+##行可视模式
+##块可视模式
