@@ -13,7 +13,7 @@ target：
 .blog, .news { background-image: url (/ sprite.png ); }
 .blog { background-position: 180px 0px }
 ```
-
+> 使用jkhl替代上下左右键，因为会无法使用.范式。
 
 
 ##构造可重复的修改 Vim
@@ -56,15 +56,20 @@ target：
 | &lt;c+x&gt;| 减一 |
 
 ##Operator-pending模式 
-###操作符 + 动作命令 = 操作 
+###操作符 + [重复次数] + 动作命令 = 操作 
 d{motion} 命令可以对一个字符（ dl ）、一个完整单词（ daw ）或一整个段落（ dap
 ）进行操作，它作用的范围由动作命令决定。 c{motion} 、 y{motion} 以及其他一些命令
 也类似，它们被统称为操作符（operator）。你可以用 :h operator 来查阅完整的列表
 
+eg:
 | 按键 | 操作 | 移动 |
 | ------ | ------ | ------ | 
 | dw | 删除 | 到下一个单词 |
-| ci( | 复制 | 在括号内 | 
+| ci( | 修改 | 在括号内 | 
+| yat | 复制 | 整个标记对 | 
+| gUi" | 修改为大写 | 引号里面的内容 | 
+| =ap | 格式化输出 | 当前段落 | 
+
 ####自定义操作符 
 ####自定义动作命令(Operator-Pending映射)
 > :onoremap b /return&lt;cr&gt; 如果执行Vim把整个函数体中直到return上面的内容都删除了  

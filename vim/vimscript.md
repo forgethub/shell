@@ -38,3 +38,29 @@ no{option},set{option}?。普通变量可以直接引用，环境变量要加前
 
 
 ## [脚本编码规范](https://spacevim.org/cn/conventions/#vim-%E8%84%9A%E6%9C%AC%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83)
+
+#实例
+自定义motion
+```
+nmap <silent> <F4> :set opfunc=CountSpaces<CR>g@
+vmap <silent> <F4> :<C-U>call CountSpaces(visualmode(), 1)<CR>
+
+function! CountSpaces(type, ...)
+	let sel_save = &selection
+	let &selection = "inclusive"
+	let reg_save = @@
+
+	if a:0  "可视模式里调用，使用 gv 命令."
+		silent exe "normal! gvy"
+	elseif a:type == 'line'
+		silent exe "normal! '[V']y"
+	else
+		silent exe "normal! `[v`]y"
+	endif
+
+	echomsg strlen(substitute(@@, '[^ ]', '', 'g'))
+
+	let &selection = sel_save
+	let @@ = reg_save
+	endfunction
+```
