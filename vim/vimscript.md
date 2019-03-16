@@ -36,11 +36,51 @@ no{option},set{option}?。普通变量可以直接引用，环境变量要加前
 
 ##函数
 
+函数属性
+* abort，中断性，在函数体执行时，一旦发现错误，立即中断运行。
+* range，范围性，函数可隐式地接收两个行地址参数。(不带range的会多次执行效率低，且执行完之后光标在范围的最后一行)
+* dict， 字典性，该函数必须通过字典键来调用。
+* closure，闭包性，内嵌函数可作为闭包。
+
+
+添加首行序列号的例子
+```
+
+function! NumberLine() abort
+    let l:sLine = getline('.')
+    let l:sLine = line('.') . ' ' . l:sLine . ';'
+    call setline('.', l:sLine)
+endfunction
+
+function! NumberLine2() abort range
+    for l:line in range(a:firstline, a:lastline)
+        let l:sLine = getline(l:line)
+        let l:sLine = l:line . ' ' . l:sLine . ';'
+        call setline(l:line, l:sLine)
+    endfor
+endfunction
+
+finish
+```
+
+## 异常处理
+```
+try
+    尝试语句块
+catch /正则1/
+    异常处理1
+catch /正则2/
+    异常处理2
+...
+finally
+    收尾语句块
+endtry
+```
 
 ## [脚本编码规范](https://spacevim.org/cn/conventions/#vim-%E8%84%9A%E6%9C%AC%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83)
 
 #实例
-自定义motion
+自定义操作符号
 ```
 nmap <silent> <F4> :set opfunc=CountSpaces<CR>g@
 vmap <silent> <F4> :<C-U>call CountSpaces(visualmode(), 1)<CR>
@@ -64,3 +104,5 @@ function! CountSpaces(type, ...)
 	let @@ = reg_save
 	endfunction
 ```
+
+
