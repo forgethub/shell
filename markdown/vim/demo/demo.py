@@ -24,5 +24,6 @@ if __name__ == '__main__':
     vimpdb.set_trace()
     controller = ReleaseCode()
     print "3"
+    vimpdb.set_trace()
     result = controller.release()
 

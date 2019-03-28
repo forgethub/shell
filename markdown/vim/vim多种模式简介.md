@@ -1,5 +1,4 @@
 #普通模式 
-
 ##减少重复的操作（结识.范式）
 vim之所以能高效地重复，是因为它会记录我们最
 近的操作，让我们用较少的按键就能重复上次的修改。   
@@ -125,6 +124,7 @@ Vim 可以用字符编码（Character Code）插入任意字符。使用此功�
 > 把下载或者自定义的字典文件放到/usr/share/dict/目录下，set dictionary=/usr/share/dict/nim012.dict
 
 
+
 python 代码的自动补全需要插件的支持
 
 #命令行模式
@@ -144,8 +144,10 @@ Vim 的先祖是 vi，正是 vi 开创了区分模式编辑的范例。相应的
 | [range]substitute/{pattern}/{string}/[flags]  | 把指定范围内出现{pattern}的地方替换为{string} |
 
 ## 自动补全Ex命令
+
 > :&lt;c-d&gt;  &lt;c-d&gt;命令可以显示补全列表
 > 把当前的单词插入命令行， <C-r><C-w> 映射项会复制光标下的单词并把它插入到命
+
 令行中。我们可以利用这一功能减少击键的次数。
 eg: 假设我们想把下面这段代码中的变量 tally 重命名为 counter
 ```
